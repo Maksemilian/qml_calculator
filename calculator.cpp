@@ -312,6 +312,6 @@ PairQml Calculator::calculate(const QString & calculationLine)
         _lastResult = QString::fromStdString(result.toString());
         return {true,_lastResult};
     }
-    qDebug()<<"ERROR_STRING:"<<output;
+    //qDebug()<<"ERROR_STRING:"<<output;
     return {false,""};
 }
