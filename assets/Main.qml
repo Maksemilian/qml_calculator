@@ -59,14 +59,9 @@ Window {
         }
 
         var dotIndex = btnDotClicked ? calculationLine.text.lastIndexOf(".") : -1
-        if((numberCounter === max_input_integer_number && content !== '.' && dotIndex < 0/**/)
-                /*|| (btnDotClicked && dotIndex > 0 && calculationLineTextLength-dotIndex > max_input_fractional_number)*/
-                )
-        {
-            //var text = calculationLine.text;
-            //calculationLine.text = text.slice(0,-1)
-            return
-        }
+        if(numberCounter === max_input_integer_number && content !== '.' && dotIndex < 0)        
+             return
+        
 
         calculationLine.text += content
         if(content !== '.')
@@ -226,10 +221,7 @@ Window {
             width: 280
             height: 30
 
-            //text: "123456789012345678901234567890.567*2"
-            //text: "1234567890123456789012345.567*2"
-            //text: "1234567890123456789012345"
-            //text:"368+497"
+            
             font.family: customFontLoader.name
             font.pixelSize:  20
             color:  "#ffffff"
@@ -260,7 +252,7 @@ Window {
             width: 281
             height: 60
 
-            text: "0"
+            
             font.family: customFontLoader.name
 
             font.pixelSize:  50

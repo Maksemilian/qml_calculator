@@ -102,7 +102,7 @@ QVector<QString> Calculator::MathExpressionParser::shuntingYard(QString expressi
                     elementsExpression.push_back(operators.top());
                     operators.pop();
                 }
-                operators.pop(); // Убрать '('
+                operators.pop();
             }
             else
             {

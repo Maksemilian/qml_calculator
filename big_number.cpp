@@ -46,8 +46,8 @@ const BigNumber BigNumber::subProcent(const BigNumber& rv) const
 std::string BigNumber::toString() const
 {
     std::stringstream ss;
-    //<<std::setprecision(3);//если добавить то некорректно выводится число большое - 2.46914e+29
-    ss << std::setprecision(std::numeric_limits<cpp_bin_float_quad>::digits10)/*<<std::setprecision(15)<<std::setw( std::ios::floatfield	)*/;
+
+    ss << std::setprecision(std::numeric_limits<cpp_bin_float_quad>::digits10);
     ss << _value;
     return ss.str();
 }
