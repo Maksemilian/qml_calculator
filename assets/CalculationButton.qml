@@ -14,6 +14,7 @@ Button {
     icon.source: source
     icon.width: 30
     icon.height: 30
+    icon.color:  "#ffffff"
     Layout.preferredWidth: buttonW
     Layout.preferredHeight: buttonH
 

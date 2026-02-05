@@ -26,17 +26,32 @@ Window {
     property bool btnPlusMinusClicked: false
     property bool leftBracket: false
     property bool rightBracket: false
+
+    property bool commandLineMode: false
+
     property int numberCounter: 0
     property int max_input_integer_number: 25
     property int max_input_fractional_number: 2
     property string error_message : "Incorrect expression"
-    
+    property string command_line_string: "CM:"
     function isNumber(name){
         return !Number.isNaN(Number(name))
     }
 
     function btnNumberClicked(content)
     {
+        if(commandLineMode)
+        {
+            calculationLine.text += content
+            calculationResult.text = command_line_string+calculationLine.text
+
+            if(calculationLine.text === "123" && calculationLine.text.length === 3)
+            {
+                //disableCommandLineMode()
+                showSecretWindowTimer.running = true
+            }
+            return
+        }
         var calculationLineTextLength = calculationLine.text.length;
 
         btnPlusMinusClicked = false
@@ -59,8 +74,8 @@ Window {
         }
 
         var dotIndex = btnDotClicked ? calculationLine.text.lastIndexOf(".") : -1
-        if(numberCounter === max_input_integer_number && content !== '.' && dotIndex < 0)        
-             return
+        if(numberCounter === max_input_integer_number && content !== '.' && dotIndex < 0)
+            return
         
 
         calculationLine.text += content
@@ -68,14 +83,13 @@ Window {
             numberCounter++;
 
         btnEqu(false)
-        if(calculationLine.text === "123" && calculationLine.text.length === 3)
-            calculationLineTimer.running = true
-        else
-            calculationLineTimer.running = false
     }
 
     function btnOperationClicked(content)
     {
+        if(commandLineMode)
+            return
+
         if(content === "=")
         {
             btnEqu()
@@ -88,7 +102,7 @@ Window {
             {
                 calculationResult.text = calculator.getErrorMessageString()
             }
-            numberCounter = 0           
+            numberCounter = 0
         }
         else if(content === "()")
         {
@@ -160,6 +174,33 @@ Window {
         }
     }
 
+    function enableCommandLineMode()
+    {
+        commandLineMode = true
+        disableCommandLineModeTimer.running = true
+        calculationResult.text = "CM:"
+        calculationLine.text = ""
+    }
+
+    function disableCommandLineMode()
+    {
+        commandLineMode = false
+        disableCommandLineModeTimer.running = false
+        calculationResult.text = ""
+        calculationLine.text = ""
+    }
+
+    function btnEquLongHoldPress()
+    {
+        enableCommandLineMode()
+    }
+
+    function showSecretWindow()
+    {
+        secretWindow.show()
+        mainWindow.hide()
+    }
+
     function btnCancelClicked()
     {
         calculationLine.text = ""
@@ -169,6 +210,8 @@ Window {
         rightBracket = false
         numberCounter = 0
         btnDotClicked = false
+        if(commandLineMode)
+            calculationResult.text = command_line_string
     }
 
     SecretWindow {
@@ -207,9 +250,9 @@ Window {
             radius: 25
         }
         FontLoader {
-                id: customFontLoader
-                source: "fonts/open_sans_semibold.ttf"
-            }
+            id: customFontLoader
+            source: "fonts/open_sans_semibold.ttf"
+        }
         Text{
             id : calculationLine
             anchors.horizontalCenter: parent.horizontalCenter
@@ -226,19 +269,6 @@ Window {
             font.pixelSize:  20
             color:  "#ffffff"
             fontSizeMode: Text.HorizontalFit
-
-            Timer {
-                id: calculationLineTimer
-
-                interval: 5000
-                repeat: false
-                running: false
-
-                onTriggered: {
-                    secretWindow.show()
-                    mainWindow.hide()
-                }
-            }
         }
         Text{
             id : calculationResult
@@ -276,16 +306,34 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
 
         Timer {
+                id: showSecretWindowTimer
+                interval: 500
+                repeat: false
+                onTriggered:
+                {
+                    disableCommandLineMode()
+                    showSecretWindow()
+                }
+            }
+
+        Timer {
+            id: disableCommandLineModeTimer
+
+            interval: 5000
+            repeat: false
+            running: false
+
+            onTriggered: disableCommandLineMode()
+        }
+
+        Timer {
             id: equButtonPressTimer
 
             interval: 4000
             repeat: false
             running: false
 
-            onTriggered: {
-                secretWindow.show()
-                mainWindow.hide()
-            }
+            onTriggered: btnEquLongHoldPress()
         }
 
         GridLayout {
